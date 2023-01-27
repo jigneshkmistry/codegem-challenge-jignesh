@@ -48,7 +48,7 @@ export class Tooltip extends Component {
 
     render() {
         return (
-            <div className="tooltip" ref={this.tooltipRef}>
+            <div className="" ref={this.tooltipRef}>
                 <div onClick={this.openTooltip} className="tooltip-trigger" id={this.id}>{this.props.target}</div>
                 <TooltipContentWrapper>
                     <TooltipContent open={this.state.open} offset={this.props.offset} ref={this.contentRef}>

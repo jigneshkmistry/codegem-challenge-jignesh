@@ -4,6 +4,7 @@ import {MyDiary} from "./MyDiary";
 
 export const FEEDBACK_FORM = 'FEEDBACK_FORM';
 export const MY_DIARY = 'MY_DIARY';
+import  "./calendar.css";
 
 export const App = () => {
     const [page, setPage] = useState(FEEDBACK_FORM);
