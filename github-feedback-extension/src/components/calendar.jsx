@@ -8,25 +8,12 @@ import { addMonths,subMonths,isSameDay,isSameMonth,
 
 export const Calendar = (props) => {
 
-    const [state, setState] = useState({
-        selectedDate: new Date(),
-    });
-
-    const updateState = (key, value) => {
-        setState((prevState) => ({
-            ...prevState,
-            [key]: value,
-        }));
-    };
-
     const nextMonth = () => {
-        const selectedDate = addMonths(state.selectedDate, 1);
-        onDateClick(selectedDate);
+        onDateClick(addMonths(props.selectedDate, 1));
     };
 
     const prevMonth = () => {
-        const selectedDate = subMonths(state.selectedDate, 1);
-        onDateClick(selectedDate);
+        onDateClick(subMonths(props.selectedDate, 1));
     };
 
     const calculateAvgSentiments = (list) => {
@@ -143,19 +130,18 @@ export const Calendar = (props) => {
     };
 
     const onDateClick = (day) => {
-        updateState("selectedDate", day);
         props.onSelectedDateChange(day);
     };
 
     const calendarData = {
-        currentMonth: state.selectedDate,
+        currentMonth: props.selectedDate,
         header: {
-            month: format(state.selectedDate, calenderConstantVal.dateFormatOfMonthAndYear),
+            month: format(props.selectedDate, calenderConstantVal.dateFormatOfMonthAndYear),
             prevMonth,
             nextMonth
         },
         body: {
-            weeks: calculateMonthData(state.selectedDate),
+            weeks: calculateMonthData(props.selectedDate),
             onDateClick
         }
     };

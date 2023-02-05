@@ -47,9 +47,8 @@ const DateSection = styled(CenteredDiv)`
 `;
 
 export const MyDiary = ({onPageChange}) => {
-    const [selectedDate, setSelectedDate] = useState(
-        format(new Date(), calenderConstantVal.dateFormatWithDaysMonthDate)
-      );
+    const [selectedDate, setSelectedDate] = useState(new Date());
+    const fomattedSelectedDate =  format(selectedDate, calenderConstantVal.dateFormatWithDaysMonthDate);
     let [feedbackList, setFeedbackList] = useState([]);
     let [checkInStatus, setCheckInStatus] = useState({});
     const [isFeedbackListLoaded, setIsFeedbackListLoaded] = useState(false);
@@ -107,29 +106,28 @@ export const MyDiary = ({onPageChange}) => {
         };
     }, [isCheckInStatusLoaded]);
 
-    const feedbackKeyedByDate = feedbackList.reduce((grouped, feedback) => {
-        let existing = [];
-        if (grouped.has(feedback.date)) {
-            existing = grouped.get(feedback.date);
-        }
-
-        grouped.set(feedback.date, [...existing, feedback]);
-
-        return grouped;
-    }, new Map());
+    const filteredList = feedbackList.filter(item =>
+        new Date(item?.created_at)?.getDate() +
+        "/" +
+        new Date(item?.created_at)?.getMonth() +
+        "/" +
+        new Date(item?.created_at)?.getFullYear() ===
+        selectedDate?.getDate() +
+        "/" +
+        selectedDate?.getMonth() +
+        "/" +
+        selectedDate?.getFullYear());
 
     // update feedback list once user select date from calender
     const handleSelectedDateChange = (selectedDate) => {
-        setSelectedDate(format(new Date(selectedDate), calenderConstantVal.dateFormatWithDaysMonthDate));
+        setSelectedDate(selectedDate);
     };
 
-    const renderNoFeedbackList = (isFeedBackExist) => (
+    const renderNoFeedbackList = () => (
         <>
-            {!isFeedBackExist ? (
-                <div className="d-flex flex-row justify-content-center pt-3">
-                    No feedback exist
-                </div>
-            ) : null}
+            <div className="d-flex flex-row justify-content-center pt-3">
+                No feedback exist
+            </div>
         </>
     );
 
@@ -167,29 +165,15 @@ export const MyDiary = ({onPageChange}) => {
             }
             {
                 <Calendar onSelectedDateChange={handleSelectedDateChange}
+                    selectedDate= {selectedDate}
                     feedBackList={feedbackList}>
                 </Calendar>
             }
             <CardSection>
-                <DateSection>{selectedDate}</DateSection>
-                {Array.from(feedbackKeyedByDate.entries()).map(
-                    ([date, feedbackItems]) => (
-                        <div key={date}>
-                            {selectedDate === date ? (
-                                <div>
-                                    {feedbackItems.map((f) => (
-                                        <FeedbackCard key={f.id} feedback={f} />
-                                    ))}
-                                </div>
-                            ) : null}
-                        </div>
-                    )
-                )}
-                {renderNoFeedbackList(
-                    Array.from(feedbackKeyedByDate.entries()).filter(
-                        ([date]) => date === selectedDate
-                    ).length > 0
-                )}
+                <DateSection>{fomattedSelectedDate}</DateSection>
+                {filteredList && filteredList.length ? filteredList.map((fbk) =>
+                     <FeedbackCard key={fbk.id} feedback={fbk} />
+                ) : renderNoFeedbackList()}
             </CardSection>
         </CardBody>
         <CardFooter>
