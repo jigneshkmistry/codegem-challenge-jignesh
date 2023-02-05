@@ -8,6 +8,8 @@ import {compareDesc, format, parseISO} from "date-fns";
 import {FeedbackCard} from "./components/feedback-card";
 import {Button, ButtonContainer} from "./components/button";
 import {FEEDBACK_FORM, MY_DIARY} from "./App";
+import { Calendar } from "./components/calendar";
+import { calenderConstantVal } from "./utils";
 
 const CenteredDiv = styled.div`
   text-align: center;
@@ -45,6 +47,9 @@ const DateSection = styled(CenteredDiv)`
 `;
 
 export const MyDiary = ({onPageChange}) => {
+    const [selectedDate, setSelectedDate] = useState(
+        format(new Date(), calenderConstantVal.dateFormatWithDaysMonthDate)
+      );
     let [feedbackList, setFeedbackList] = useState([]);
     let [checkInStatus, setCheckInStatus] = useState({});
     const [isFeedbackListLoaded, setIsFeedbackListLoaded] = useState(false);
@@ -62,7 +67,7 @@ export const MyDiary = ({onPageChange}) => {
                                 .sort((a, b) => compareDesc(a.created_at, b.created_at))
                                 .map(f => ({
                                         ...f,
-                                        date: format(f.created_at, 'eeee MMM d')
+                                        date: format(f.created_at, calenderConstantVal.dateFormatWithDaysMonthDate)
                                     })
                                 ));
                         setIsFeedbackListLoaded(true);
@@ -113,6 +118,21 @@ export const MyDiary = ({onPageChange}) => {
         return grouped;
     }, new Map());
 
+    // update feedback list once user select date from calender
+    const handleSelectedDateChange = (selectedDate) => {
+        setSelectedDate(format(new Date(selectedDate), calenderConstantVal.dateFormatWithDaysMonthDate));
+    };
+
+    const renderNoFeedbackList = (isFeedBackExist) => (
+        <>
+            {!isFeedBackExist ? (
+                <div className="d-flex flex-row justify-content-center pt-3">
+                    No feedback exist
+                </div>
+            ) : null}
+        </>
+    );
+
     return (<Card>
         <CardHeader dismissible>
          My Log
@@ -145,13 +165,31 @@ export const MyDiary = ({onPageChange}) => {
                     </BoxChipsContainer>
                 </BottomBorderedCardSection>
             }
+            {
+                <Calendar onSelectedDateChange={handleSelectedDateChange}
+                    feedBackList={feedbackList}>
+                </Calendar>
+            }
             <CardSection>
-                {Array.from(feedbackKeyedByDate.entries()).map(([date, feedbackItems]) => <div key={date}>
-                    <DateSection>
-                        {date}
-                    </DateSection>
-                    {feedbackItems.map(f => <FeedbackCard key={f.id} feedback={f} />)}
-                </div>)}
+                <DateSection>{selectedDate}</DateSection>
+                {Array.from(feedbackKeyedByDate.entries()).map(
+                    ([date, feedbackItems]) => (
+                        <div key={date}>
+                            {selectedDate === date ? (
+                                <div>
+                                    {feedbackItems.map((f) => (
+                                        <FeedbackCard key={f.id} feedback={f} />
+                                    ))}
+                                </div>
+                            ) : null}
+                        </div>
+                    )
+                )}
+                {renderNoFeedbackList(
+                    Array.from(feedbackKeyedByDate.entries()).filter(
+                        ([date]) => date === selectedDate
+                    ).length > 0
+                )}
             </CardSection>
         </CardBody>
         <CardFooter>

@@ -1,0 +1,275 @@
+
+/* FONT IMPORTS */
+@import url(https://fonts.googleapis.com/icon?family=Material+Icons);
+@import url(https://fonts.googleapis.com/icon?family=Nunito);
+
+.icon {
+    font-family: "Material Icons", serif;
+    font-style: normal;
+    display: inline-block;
+    vertical-align: middle;
+    line-height: 1;
+    text-transform: none;
+    letter-spacing: normal;
+    word-wrap: normal;
+    white-space: nowrap;
+    direction: ltr;
+
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+    -moz-osx-font-smoothing: grayscale;
+    font-feature-settings: "liga";
+}
+
+/* VARIABLES */
+
+:root {
+    --main-color: #1a8fff;
+    --text-color: #777;
+    --text-color-light: #CBD5F7;
+    --border-color: #eee;
+    --bg-color: #f9f9f9;
+    --neutral-color: #fff;
+    --linear-gradient-pink: linear-gradient(rgba(255, 185, 195, 1), rgba(254, 141, 156, 1));
+    --linear-gradient-red: linear-gradient(rgba(254, 118, 144, 1), rgba(220, 48, 71, 1));
+    --linear-gradient-light-green: linear-gradient(rgba(139, 247, 209, 1), rgba(70, 200, 149, 1));
+    --linear-gradient-dark-green: linear-gradient(rgba(106, 218, 160, 1), rgba(45, 164, 103, 1));
+    --linear-gradient-dark-yellow: linear-gradient(rgba(255, 235, 156, 1), rgba(255, 199, 74, 1));
+    --cell-prevMonth-bg-color: #F5F8FF;
+    --cell-with-added-mood-bg-color: linear-gradient(180deg, #8BF7D1 0%, #46C895 100%);
+    --cell-hover-border-color: rgba(66, 133, 244, 0.4);
+    --calender-days-color: #6A737D;
+    --calender-header-text-color: #717C99;
+    --font-family: Nunito;
+    --calender-cell-selected-color: #537DEF;
+    --calender-inside-box-shadow-color: rgba(0, 0, 0, 0.2);
+    --white-color: white;
+    --calender-cells-circle-inside-shadow-color: #00000033;
+}
+
+header {
+    display: block;
+    width: 100%;
+    padding: 1.75em 0;
+    background: var(--neutral-color);
+    border-bottom: none;
+}
+
+header #logo {
+    font-size: 175%;
+    text-align: center;
+    color: var(--main-color);
+    line-height: 1;
+}
+
+header #logo .icon {
+    padding-right: 0.25em;
+}
+
+main {
+    display: block;
+    margin: 0 auto;
+    margin-top: 5em;
+    max-width: 50em;
+}
+
+/* Calendar */
+
+.calendar {
+    display: flex;
+    flex-direction: column;
+    background: var(--neutral-color);
+}
+
+.calendar .header {
+    font-family: var(--font-family);
+    text-transform: uppercase;
+    font-weight: 400;
+    font-size: 13px;
+    color: var(--calender-header-text-color);
+}
+
+.calendar .header .icon {
+    cursor: pointer;
+    transition: 0.15s ease-out;
+}
+
+.calendar .header .icon:hover {
+    transform: scale(1.75);
+    transition: 0.25s ease-out;
+    color: var(--main-color);
+}
+
+.calendar .header .icon:first-of-type {
+    margin-left: 1em;
+}
+
+.calendar .header .icon:last-of-type {
+    margin-right: 1em;
+}
+
+.calendar .days {
+    font-weight: 400;
+    color: var(--calender-days-color);
+    font-size: 12px;
+    font-family: var(--font-family);
+}
+
+.calendar .body .cell {
+    position: relative;
+    cursor: pointer;
+    border-right: none;
+    width: 34px;
+    height: 34px;
+    background: var(--linear-gradient-light-green);
+    opacity: 1;
+    border-top-left-radius: 6px;
+    border-top-right-radius: 6px;
+    border-bottom-left-radius: 4px;
+    border-bottom-right-radius: 6px;
+    overflow: hidden;
+    text-align: center;
+    padding: 5px;
+}
+
+.calendar .body .selected {
+    border: 1px solid var(--calender-cell-selected-color);
+    box-shadow: inset 0px 0px 3px var(--calender-cell-selected-color);
+}
+
+.calendar .body .noCheckInsExist {
+    background: var(--cell-prevMonth-bg-color);
+    color: var(--text-color-light);
+}
+
+.calendar .body .checkInsExist {
+    background: var(--linear-gradient-light-green);
+}
+
+.calendar .body .row {
+    border-bottom: none;
+    gap: 0.3em;
+}
+
+.calendar .body .row:last-child {
+    border-bottom: none;
+}
+
+.calendar .body .cell:last-child {
+    border-right: none;
+}
+
+.calendar .body .cell .number {
+    font-size: 82.5%;
+    line-height: 1;
+    top: 0.75em;
+    font-weight: 700;
+    font-family: var(--font-family);
+}
+
+.empty {
+    color: var(--calender-cell-selected-color);
+    font-size: 14px;
+    font-weight: 600;
+}
+
+.danger {
+    background: var(--linear-gradient-red) !important;
+}
+
+.neutral {
+    background: var(--linear-gradient-dark-yellow) !important;
+}
+
+.positive {
+    background: var(--linear-gradient-dark-green) !important;
+}
+
+.calendar .body .prevMonth {
+    background: var(--cell-prevMonth-bg-color);
+    color: var(--text-color-light);
+    opacity: 0.7;
+}
+
+.calender-cell {
+    position: relative;
+    cursor: pointer;
+    border-right: none;
+    box-shadow: inset 0px 0px 7px var(--calender-inside-box-shadow-color);
+    background: var(--cell-with-added-mood-bg-color);
+    opacity: 1;
+    border-top-left-radius: 6px;
+    border-top-right-radius: 6px;
+    border-bottom-left-radius: 4px;
+    border-bottom-right-radius: 6px;
+    overflow: hidden;
+    text-align: center;
+    padding: 2px;
+    color: var(--white-color);
+    font-size: 14px;
+    font-family: var(--font-family);
+}
+
+.calender-cell:hover {
+    box-shadow: 0px 0px 2px var(--cell-hover-border-color);
+    border-radius: 6.86px 6.86px 6.86px 4.5px;
+}
+
+.cirle-container {
+    height: 14px;
+    width: 14px;
+    border-radius: 50%;
+    box-shadow: 0px 0px 1.8000001907348633px 0px #B8C2E280 inset;
+    font-size: 8px;
+}
+
+.circle {
+    margin: 1px;
+    height: 5px;
+    width: 5px;
+    border-radius: 50%;
+    background: var(--linear-gradient-dark-green);
+    box-shadow: 0px 0px 1px 0px var(--calender-cells-circle-inside-shadow-color) inset;
+}
+
+/* GRID */
+
+.row {
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    width: 100%;
+}
+
+.row-middle {
+    align-items: center;
+}
+
+.col {
+    flex-grow: 1;
+    flex-basis: 0;
+    max-width: 100%;
+}
+
+.col-start {
+    justify-content: flex-start;
+    text-align: left;
+}
+
+.col-center {
+    justify-content: center;
+    text-align: center;
+}
+
+.col-end {
+    justify-content: flex-end;
+    text-align: right;
+}
+
+.row-gap {
+    display: flex;
+    flex-wrap: wrap;
+    row-gap: 0.3em;
+}

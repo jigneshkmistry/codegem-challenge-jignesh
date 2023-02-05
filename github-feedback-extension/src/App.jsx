@@ -1,6 +1,7 @@
 import React, {useState} from "react";
 import {FeedbackForm} from "./FeedbackForm";
 import {MyDiary} from "./MyDiary";
+import  "./calendar.css";
 
 export const FEEDBACK_FORM = 'FEEDBACK_FORM';
 export const MY_DIARY = 'MY_DIARY';
