@@ -1,6 +1,4 @@
 /* FONT IMPORTS */
-
-@import url(https://fonts.googleapis.com/css?family=Open+Sans:300,400,700);
 @import url(https://fonts.googleapis.com/icon?family=Material+Icons);
 @import url(https://fonts.googleapis.com/icon?family=Nunito);
 
@@ -36,7 +34,7 @@
     --linear-gradient-light-green: linear-gradient(rgba(139, 247, 209, 1), rgba(70, 200, 149, 1));
     --linear-gradient-dark-green: linear-gradient(rgba(106, 218, 160, 1), rgba(45, 164, 103, 1));
     --linear-gradient-dark-yellow: linear-gradient(rgba(255, 235, 156, 1), rgba(255, 199, 74, 1));
-    --cell-disabled-bg-color: #F5F8FF;
+    --cell-prevMonth-bg-color: #F5F8FF;
     --cell-with-added-mood-bg-color: linear-gradient(180deg, #8BF7D1 0%, #46C895 100%);
     --cell-hover-border-color: rgba(66, 133, 244, 0.4);
     --calender-days-color: #6A737D;
@@ -140,7 +138,7 @@ main {
 }
 
 .calendar .body .noCheckInsExist {
-    background: var(--cell-disabled-bg-color);
+    background: var(--cell-prevMonth-bg-color);
     color: var(--text-color-light);
 }
 
@@ -187,10 +185,10 @@ main {
     background: var(--linear-gradient-dark-green) !important;
 }
 
-.calendar .body .disabled {
-    background: var(--cell-disabled-bg-color);
+.calendar .body .prevMonth {
+    background: var(--cell-prevMonth-bg-color);
     color: var(--text-color-light);
-    pointer-events: none;
+    opacity: 0.7;
 }
 
 .calender-cell {

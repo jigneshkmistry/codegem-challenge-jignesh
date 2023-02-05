@@ -10,4 +10,5 @@ export const calenderConstantVal = {
   daysOfWeek: 7,
   neutralSentimentStartRange: 2,
   neutralSentimentEndRange: 3,
+  dateFormatWithDaysMonthDate: 'eeee MMM d'
 };

@@ -11,7 +11,7 @@ import ApiService from "./services/api";
 import styled from "@emotion/styled";
 import { BoxChip } from "./components/box-chip";
 import { Colors } from "./utils/colors";
-import { addCustomDays, calenderConstantVal } from "./utils";
+import { calenderConstantVal } from "./utils";
 import { compareDesc, format, parseISO } from "date-fns";
 import { FeedbackCard } from "./components/feedback-card";
 import { Button, ButtonContainer } from "./components/button";
@@ -54,7 +54,9 @@ const DateSection = styled(CenteredDiv)`
 `;
 
 export const MyDiary = ({ onPageChange }) => {
-  const [baseFeedBackList, setbaseFeedBackList] = useState([]);
+  const [selectedDate, setSelectedDate] = useState(
+    format(new Date(), calenderConstantVal.dateFormatWithDaysMonthDate)
+  );
   let [feedbackList, setFeedbackList] = useState([]);
   let [checkInStatus, setCheckInStatus] = useState({});
   const [isFeedbackListLoaded, setIsFeedbackListLoaded] = useState(false);
@@ -66,14 +68,15 @@ export const MyDiary = ({ onPageChange }) => {
       ApiService.get("/feedback")
         .then((res) => {
           if (isMounted) {
-            let list = prepareFeedbackList(res.data);
-            filterFeedBackListBasedOnSelectedDate({
-              selectedDate: new Date(),
-              format: calenderConstantVal.dateFormatOfDateMonthYear,
-              addDayCount: 1,
-              list,
-            });
-            setbaseFeedBackList(list);
+            setFeedbackList(
+                res.data
+                    .map(f => ({...f, created_at: parseISO(f.created_at)}))
+                    .sort((a, b) => compareDesc(a.created_at, b.created_at))
+                    .map(f => ({
+                            ...f,
+                            date: format(f.created_at, 'eeee MMM d')
+                        })
+                    ));
             setIsFeedbackListLoaded(true);
           }
         })
@@ -111,17 +114,6 @@ export const MyDiary = ({ onPageChange }) => {
     };
   }, [isCheckInStatusLoaded]);
 
-  // prepare feedBack list based on date fns format
-  const prepareFeedbackList = (list) => {
-    return list
-      .map((f) => ({ ...f, created_at: parseISO(f.created_at) }))
-      .sort((a, b) => compareDesc(a.created_at, b.created_at))
-      .map((f) => ({
-        ...f,
-        date: format(f.created_at, "eeee MMM d"),
-      }));
-  };
-
   const feedbackKeyedByDate = feedbackList.reduce((grouped, feedback) => {
     let existing = [];
     if (grouped.has(feedback.date)) {
@@ -134,29 +126,19 @@ export const MyDiary = ({ onPageChange }) => {
   }, new Map());
 
   // update feedback list once user select date from calender
-  const filterFeedBackListBasedOnSelectedDate = ({
-    selectedDate,
-    format,
-    addDayCount,
-    list,
-  }) => {
-    const { startDate, endDate } = addCustomDays(
-      selectedDate,
-      format,
-      addDayCount
-    );
-    let selectedStartDate = new Date(startDate)?.toISOString();
-    let selectedEndDate = new Date(endDate)?.toISOString();
-    // using to prevent mutation on original list
-    let deepClonedBaseFeedBackList = JSON.parse(
-      JSON.stringify(list ? list : baseFeedBackList)
-    );
-    deepClonedBaseFeedBackList = deepClonedBaseFeedBackList?.filter(
-      (item) =>
-        item.created_at > selectedStartDate && item.created_at < selectedEndDate
-    );
-    setFeedbackList(prepareFeedbackList(deepClonedBaseFeedBackList));
+  const filterFeedBackListBasedOnSelectedDate = (selectedDate) => {
+    setSelectedDate(format(new Date(selectedDate), calenderConstantVal.dateFormatWithDaysMonthDate));
   };
+
+  const renderNoFeedbackList = (isFeedBackExist) => (
+    <>
+      {!isFeedBackExist ? (
+        <div className="d-flex flex-row justify-content-center pt-3">
+          No feedback exist
+        </div>
+      ) : null}
+    </>
+  );
 
   return (
     <Card>
@@ -192,23 +174,32 @@ export const MyDiary = ({ onPageChange }) => {
             </BoxChipsContainer>
           </BottomBorderedCardSection>
         )}
-        {/* Calendar Component */}
+        {/* render calendar container component */}
         <Calendar
           updateFeedBackListOnSelectedDate={
             filterFeedBackListBasedOnSelectedDate
           }
-          feedBackList={baseFeedBackList}
+          feedBackList={feedbackList}
         />
         <CardSection>
+          <DateSection>{selectedDate}</DateSection>
           {Array.from(feedbackKeyedByDate.entries()).map(
             ([date, feedbackItems]) => (
               <div key={date}>
-                <DateSection>{date}</DateSection>
-                {feedbackItems.map((f) => (
-                  <FeedbackCard key={f.id} feedback={f} />
-                ))}
+                {selectedDate === date ? (
+                  <div>
+                    {feedbackItems.map((f) => (
+                      <FeedbackCard key={f.id} feedback={f} />
+                    ))}
+                  </div>
+                ) : null}
               </div>
             )
+          )}
+          {renderNoFeedbackList(
+            Array.from(feedbackKeyedByDate.entries()).filter(
+              ([date]) => date === selectedDate
+            ).length > 0
           )}
         </CardSection>
       </CardBody>
