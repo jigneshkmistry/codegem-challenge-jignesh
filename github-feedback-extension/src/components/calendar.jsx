@@ -50,7 +50,7 @@ export const Calendar = (props) => {
                 avgSentiment <= calenderConstantVal.neutralSentimentEndRange:
                 className = "neutral";
                 break;
-            case avgSentiment >= calenderConstantVal.neutralSentimentEndRange:
+            case avgSentiment > calenderConstantVal.neutralSentimentEndRange:
                 className = "positive";
                 break;
             default:
@@ -106,7 +106,7 @@ export const Calendar = (props) => {
 
                 daysInWeek.push({
                     day: day,
-                    date: format(day, calenderConstantVal.dateFormatOfDate),
+                    date: todayCheckInIsEmpty ? "?" : format(day, calenderConstantVal.dateFormatOfDate),
                     sentimentsClassName: checkInsCount > 0
                         && renderClassBasedOnSentiments(avgSentiments),
                     timeAndCheckInsClassName: renderClassBasedOnTimeAndCheckInsCount({
