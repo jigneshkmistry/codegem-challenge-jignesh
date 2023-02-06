@@ -18,7 +18,7 @@
   },
   "scripts": {
     "start": "node index.js",
-    "start:dev": "nodemon index.js",
+    "start:dev": "nodemon index.js --inspect",
     "lint": "eslint . --ext .js",
     "docker": "docker-compose up --build",
     "docker:dev": "docker-compose -f docker-compose.dev.yml down --volumes && docker-compose -f docker-compose.dev.yml up -d",
